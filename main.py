@@ -2,21 +2,26 @@ from crawler import crawl_documents
 from indexer import build_inverted_index
 from ranker import rank_documents
 
-documents=crawl_documents("documents")
+def main():
+    documents = crawl_documents("documents")
+    index = build_inverted_index(documents)
 
-index= build_inverted_index(documents)
+    print("Mini Local Search Engine Ready!")
+    print("--------------------------------")
 
-print("Search Engine Ready! Type your query (or 'exit' to quit):")
+    while True:
+        query = input("Enter search query (or type 'exit'): ").lower()
 
+        if query == "exit":
+            break
 
-while True:
-    query=input("Enter your query").lower()
+        results = rank_documents(query, documents)
 
-    if query=="exit":
-        break
+        print("\nSearch Results:")
+        for doc, score in results:
+            print(f"{doc} -> Score: {round(score, 4)}")
 
-    results=rank_documents(query,documents)
-    print("Search Results:")
+        print()
 
-    for doc,score in results:
-        print(f"{doc} (Score: {score:.4f})")
+if __name__ == "__main__":
+    main()
